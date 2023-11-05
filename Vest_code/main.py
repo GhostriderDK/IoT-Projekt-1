@@ -154,7 +154,7 @@ def get_adafruit_gps():
         # hvis der er kommet end bruggbar værdi på alle der skal anvendes
         if gps.get_speed() != -999 and gps.get_latitude() != -999.0 and gps.get_longitude() != -999.0 and gps.get_validity() == "A":
             # gemmer returværdier fra metodekald i variabler
-            speed =str(gps.get_speed())
+            speed =str(gps.get_speed()/3.6)
             lat = str(gps.get_latitude())
             lon = str(gps.get_longitude())
             # returnerer data med adafruit gps format
@@ -190,7 +190,6 @@ def neopixel_thread(dummy):
     
 #"""hvis accelerationens absolute værdi (værdien med fjernet fortegn. Så hvis værdien var negativ er den nu positiv.) er mindre en 0.3 OG vores tackle_state fortæller vi ikke er tacklet. så skal blokken kører"""
         if abs(acceleration.y) < 0.1 and tackle_state == False:
-            akse_pos()
             tackle_state = True                                 # ændre vores tackle_state til at vi er tacklet """
             print("tackling fundet")                            # printer i shell 'tackling fundet' så vi kan se at det er registreret """
             
@@ -252,6 +251,7 @@ def startup():
     acceleration = imu.accel
     print("imu pos: ", acceleration.y)
     print("boot mqtt.besked", mqtt.besked)
+    mqtt.web_print("type 'rdy' when ready")
     while(mqtt.besked != "rdy"):
         sleep(1)
         print("boot mqtt.besked", mqtt.besked)
